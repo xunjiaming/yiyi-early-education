@@ -1,4 +1,4 @@
-# 之之早教工作台
+# 伊伊早教工作台
 
 面向 0-3 岁宝宝的月龄自适应早教工具。家长在首次使用时设置宝宝出生日期，系统按月龄自动切换到对应年龄段的内容，覆盖精细动作、语言启蒙、认知、英文启蒙、大运动与感统、发育观察、教具与空间等模块。
 
@@ -17,6 +17,6 @@
 
 ## 在线访问
 
-- 线上地址：https://xunjiaming.github.io/zhizhi-early-education/
-- 仓库：https://github.com/xunjiaming/zhizhi-early-education
+- 线上地址：https://xunjiaming.github.io/yiyi-early-education/
+- 仓库：https://github.com/xunjiaming/yiyi-early-education
 - 日常更新推送 `git push origin main` 后由 GitHub Actions 自动构建部署。

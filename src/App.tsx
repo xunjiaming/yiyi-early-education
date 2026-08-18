@@ -58,7 +58,7 @@ export default function App() {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `zhizhi-backup-${dayKey}.json`
+    a.download = `yiyi-backup-${dayKey}.json`
     a.click()
     URL.revokeObjectURL(url)
     setNotice('已导出备份文件，请妥善保存。')

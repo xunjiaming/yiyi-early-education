@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "之之早教工作台（0-3岁月龄自适应）",
+  "description": "伊伊早教工作台（0-3岁月龄自适应）",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

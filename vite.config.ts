@@ -10,7 +10,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192.png', 'icon-512.png'],
       manifest: {
-        name: '之之早教工作台',
+        name: '伊伊早教工作台',
         short_name: '早教台',
         description: '0-3 岁月龄自适应早教工具',
         theme_color: '#ffffff',

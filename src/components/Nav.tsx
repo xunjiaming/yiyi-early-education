@@ -33,7 +33,7 @@ export function Sidebar({
       <div className="brand">
         <div className="brand-icon">🎈</div>
         <div>
-          <div className="brand-name">之之早教台</div>
+          <div className="brand-name">伊伊早教台</div>
           <div className="brand-sub">0-3 岁版</div>
         </div>
       </div>

@@ -16,8 +16,8 @@
 
 ```json
 {
-  "nickname": "之之",
-  "birthDate": "2026-04-01",
+  "nickname": "伊伊",
+  "birthDate": "2026-03-31",
   "dailyTimeSlot": "每天下午约1小时",
   "enableEnglish": true
 }

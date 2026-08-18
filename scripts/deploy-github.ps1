@@ -1,5 +1,5 @@
 ﻿param(
-  [string]$RepoName = "zhizhi-early-education"
+  [string]$RepoName = "yiyi-early-education"
 )
 $ErrorActionPreference = "Continue"
 $root = Split-Path -Parent $PSScriptRoot
@@ -51,7 +51,7 @@ try {
 } catch {
   $body = @{
     name = $RepoName
-    description = "之之早教工作台（0-3 岁月龄自适应）"
+    description = "伊伊早教工作台（0-3 岁月龄自适应）"
     private = $false
     auto_init = $false
   } | ConvertTo-Json
@@ -74,7 +74,7 @@ git remote add origin "https://github.com/$owner/$RepoName.git"
 git push -u origin main
 if ($LASTEXITCODE -ne 0) {
   Write-Host "HTTPS 推送失败，改用 SSH over 443 通道重试..."
-  $keyBase = Join-Path $env:TEMP "codex-deploy-key-zhizhi"
+  $keyBase = Join-Path $env:TEMP "codex-deploy-key-yiyi"
   if (Test-Path $keyBase) { Remove-Item $keyBase -Force }
   if (Test-Path "$keyBase.pub") { Remove-Item "$keyBase.pub" -Force }
   & node (Join-Path $root "scripts/generate-ssh-key.mjs") $keyBase

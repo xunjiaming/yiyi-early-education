@@ -34,7 +34,7 @@ export default function MineView({
   const nextBand = bandForAgeMonths(ageMonths + 1)
 
   function submitProfile() {
-    onSaveProfile({ nickname: nickname.trim() || '之之', birthDate })
+    onSaveProfile({ nickname: nickname.trim() || '伊伊', birthDate })
     clearNotice()
   }
 

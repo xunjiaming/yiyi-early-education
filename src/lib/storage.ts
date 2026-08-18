@@ -61,14 +61,16 @@ export interface BabyProfile {
 
 const PROFILE_KEY = 'baby.profile.v1'
 
-const DEFAULT_PROFILE: BabyProfile = { nickname: '之之', birthDate: '' }
+const DEFAULT_PROFILE: BabyProfile = { nickname: '伊伊', birthDate: '2026-03-31' }
+const LEGACY_DEFAULT: BabyProfile = { nickname: '之之', birthDate: '' }
 
 export function readProfile(): BabyProfile {
   try {
     const raw = localStorage.getItem(PROFILE_KEY)
     if (!raw) return { ...DEFAULT_PROFILE }
     const data = JSON.parse(raw) as Partial<BabyProfile>
-    return { nickname: data.nickname || DEFAULT_PROFILE.nickname, birthDate: data.birthDate || '' }
+    if (data.nickname === LEGACY_DEFAULT.nickname && !data.birthDate) return { ...DEFAULT_PROFILE }
+    return { nickname: data.nickname || DEFAULT_PROFILE.nickname, birthDate: data.birthDate || DEFAULT_PROFILE.birthDate }
   } catch {
     return { ...DEFAULT_PROFILE }
   }
