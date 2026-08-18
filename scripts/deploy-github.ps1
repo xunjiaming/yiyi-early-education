@@ -25,7 +25,8 @@ function Push-WithSsh {
   $pub = (Get-Content $PubKeyPath -Raw).Trim()
   $keyBody = @{ title = "codex-deploy"; key = $pub; read_only = $false } | ConvertTo-Json
   $keyResult = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$Owner/$RepoName/keys" -Headers $headers -Body $keyBody -ContentType "application/json"
-  $env:GIT_SSH_COMMAND = "ssh -i `"$PrivKeyPath`" -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=$env:TEMP\codex-known-hosts -p 443"
+  $knownFile = (Join-Path $env:TEMP 'codex-known-hosts').Replace('\', '/')
+  $env:GIT_SSH_COMMAND = "ssh -i `"$PrivKeyPath`" -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=$knownFile -p 443"
   & git remote set-url origin "ssh://git@ssh.github.com:443/$Owner/$RepoName.git"
   & git push -u origin main
   $pushExit = $LASTEXITCODE
