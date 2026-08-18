@@ -458,6 +458,38 @@ button {
   display: inline-block;
 }
 
+.task-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.task-line .check-row {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-speaker {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--primary-light);
+  background: var(--card-bg);
+  color: var(--primary);
+  cursor: pointer;
+  margin-top: 10px;
+  transition: all 0.12s ease;
+}
+
+.task-speaker:active {
+  transform: scale(0.92);
+  background: var(--primary);
+  color: #fff;
+}
+
 .progress {
   height: 8px;
   border-radius: 999px;

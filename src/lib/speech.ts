@@ -5,21 +5,49 @@ function speechSupported(): boolean {
   supported = typeof window !== 'undefined' && 'speechSynthesis' in window
   return supported
 }
+function pickEnVoice(synth: SpeechSynthesis): SpeechSynthesisVoice | null {
+  const voices = synth.getVoices()
+  return voices.find((v) => /en[-_]/i.test(v.lang) && /us|united states|american/i.test(v.name + v.lang))
+    || voices.find((v) => /^en/i.test(v.lang)) || null
+}
 
 export function speak(text: string, rate = 0.78): boolean {
   if (!speechSupported()) return false
   const synth = window.speechSynthesis
   synth.cancel()
-  const voices = synth.getVoices()
-  const voice = voices.find((v) => /en[-_]/i.test(v.lang) && /us|united states|american/i.test(v.name + v.lang))
-    || voices.find((v) => /^en/i.test(v.lang)) || null
   const utter = new SpeechSynthesisUtterance(text)
   utter.lang = 'en-US'
+  const voice = pickEnVoice(synth)
   if (voice) utter.voice = voice
   utter.rate = rate
   utter.pitch = 1.05
   synth.speak(utter)
   return true
+}
+
+// 逐条连续朗读，用于组合内容一次听完整段
+export function speakSequence(texts: string[], rate = 0.78): { cancel: () => void } {
+  const noop = { cancel: () => {} }
+  if (!speechSupported() || texts.length === 0) return noop
+  const synth = window.speechSynthesis
+  synth.cancel()
+  const voice = pickEnVoice(synth)
+  let index = 0
+  let stopped = false
+  const next = () => {
+    if (stopped) return
+    if (index >= texts.length) return
+    const utter = new SpeechSynthesisUtterance(texts[index++])
+    utter.lang = 'en-US'
+    if (voice) utter.voice = voice
+    utter.rate = rate
+    utter.pitch = 1.05
+    utter.onend = next
+    utter.onerror = next
+    synth.speak(utter)
+  }
+  next()
+  return { cancel: () => { stopped = true; synth.cancel() } }
 }
 
 export function stopSpeaking(): void {

@@ -1,5 +1,9 @@
 import { CheckRow } from './CheckRow'
 import { themeOf, type AgeBand, type DayModule } from '../data/content'
+import { useEffect } from 'react'
+import { Volume2 } from 'lucide-react'
+import type { PlayTaskAudio } from '../data/content'
+import { playSongAudio, playSpeechAudio, stopTaskAudio } from '../lib/player'
 import type { ViewKey } from './Nav'
 
 interface TodayViewProps {
@@ -33,6 +37,12 @@ export default function TodayView({
     0
   )
   const theme = themeOf(new Date()).name
+  useEffect(() => () => stopTaskAudio(), [])
+
+  function playTask(audio: PlayTaskAudio) {
+    if (audio.kind === 'song') void playSongAudio(audio.title)
+    else playSpeechAudio(audio.texts)
+  }
 
   return (
     <>
@@ -78,18 +88,27 @@ export default function TodayView({
               </span>
             </div>
             <div className="module-body">
-              {mod.items.map((it) => (
-                <CheckRow
-                  key={it.id}
-                  done={!!dayStore[`${mod.id}-${it.id}`]}
-                  onToggle={onToggleDaily}
-                  itemKey={`${mod.id}-${it.id}`}
-                  title={it.title}
-                  how={it.how}
-                  note={it.note}
-                  accent={mod.accent}
-                />
-              ))}
+              {mod.items.map((it) => {
+                const audio = it.audio
+                return (
+                  <div className="task-line" key={it.id}>
+                    <CheckRow
+                      done={!!dayStore[`${mod.id}-${it.id}`]}
+                      onToggle={onToggleDaily}
+                      itemKey={`${mod.id}-${it.id}`}
+                      title={it.title}
+                      how={it.how}
+                      note={it.note}
+                      accent={mod.accent}
+                    />
+                    {mod.id === 'eng' && audio && (
+                      <button className="task-speaker" title="播放音频" aria-label="播放音频" onClick={() => playTask(audio)}>
+                        <Volume2 size={17} />
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </section>
         )

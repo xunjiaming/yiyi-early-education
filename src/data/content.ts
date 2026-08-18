@@ -4,11 +4,16 @@ import { EXTRA_FINE_13_36, EXTRA_LANG_13_36, EXTRA_COG_13_36, EXTRA_MOTOR_13_36 
 import { OBSERVATION_13_18, OBSERVATION_19_24, OBSERVATION_25_30, OBSERVATION_31_36 } from './observation1336'
 import { EXTRA_LIBRARY } from './libraryExtra'
 import { ENGLISH_BY_BAND, type EnglishSet } from './englishExtra'
+
+export type PlayTaskAudio =
+  | { kind: 'song'; title: string }
+  | { kind: 'speech'; texts: string[] }
 export interface DayItem {
   id: string
   title: string
   how: string
   note?: string
+  audio?: PlayTaskAudio
 }
 
 export interface DayModule {
@@ -291,9 +296,9 @@ export function buildDay(date: Date = new Date(), bandKey: string = '4-6m'): Day
       accent: '#9b59b6',
       subtitle: '磨耳朵 · 短句 · TPR',
       items: [
-        { id: 'eng1', title: `今晚磨耳朵：${song}`, how: '播放这首歌音频给宝宝听，只磨耳朵，不做任何引导。', note: theme.name },
-        { id: 'eng2', title: '亲子口语', how: `妈妈慢慢说：${phrase}，再说一遍：${phrase2}。`, note: '不用宝宝听懂，听语调即可。' },
-        { id: 'eng3', title: `TPR 动作：${tpr.title}`, how: `${tpr.how}` }
+        { id: 'eng1', title: `今晚磨耳朵：${song}`, how: '播放这首歌音频给宝宝听，只磨耳朵，不做任何引导。', note: theme.name, audio: { kind: 'song', title: song } },
+        { id: 'eng2', title: '亲子口语', how: `妈妈慢慢说：${phrase}，再说一遍：${phrase2}。`, note: '不用宝宝听懂，听语调即可。', audio: { kind: 'speech', texts: [phrase, phrase2] } },
+        { id: 'eng3', title: `TPR 动作：${tpr.title}`, how: `${tpr.how}`, audio: { kind: 'speech', texts: [tpr.phrase] } }
       ]
     },
     {
