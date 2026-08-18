@@ -73,14 +73,14 @@ export default function EnglishView({ band }: { band: AgeBand }) {
       </div>
 
       <div className="mode-section-title">磨耳朵歌单</div>
-      <p style={{ fontSize: 12, color: '#7a7f87', marginTop: -8 }}>建议每周固定 1 至 2 首英文儿歌反复听。</p>
+      <p style={{ fontSize: 12, color: '#8b7a89', marginTop: -8 }}>建议每周固定 1 至 2 首英文儿歌反复听。</p>
       {engSet.songs.map((song, i) => {
         const id = slug(song)
         return (
           <div className="eng-row" key={song} style={i > 0 ? { marginTop: -8 } : undefined}>
             <div className="eng-row-head">
               <div>
-                <h3 className="eng-title"><Music size={15} style={{ display: 'inline', marginRight: 6, color: '#9b59b6' }} />{song}</h3>
+                <h3 className="eng-title"><Music size={15} style={{ display: 'inline', marginRight: 6, color: '#ff6b9d' }} />{song}</h3>
                 <p className="eng-desc">可上传你的音频文件播放，未上传时自动播放轻旋律</p>
               </div>
               <div className="action-bar" style={{ marginTop: 0 }}>
@@ -107,7 +107,7 @@ export default function EnglishView({ band }: { band: AgeBand }) {
       <div className="card-grid">
         {engSet.phrases.map((phrase) => (
           <div className="entry-card" key={phrase}>
-            <h3 className="entry-title" style={{ color: '#9b59b6' }}>{phrase}</h3>
+            <h3 className="entry-title" style={{ color: '#ff6b9d' }}>{phrase}</h3>
             <p className="entry-how">妈妈慢慢说给宝宝听，注重语调。</p>
             <button className="btn" onClick={() => speakPhrase(phrase)}>
               {speaking ? <Volume2 size={15} /> : <Play size={15} />} 播放
@@ -117,12 +117,12 @@ export default function EnglishView({ band }: { band: AgeBand }) {
       </div>
 
       <div className="mode-section-title">TPR 动作演示</div>
-      <p style={{ fontSize: 12, color: '#7a7f87', marginTop: -8 }}>TPR 由妈妈边说边做动作，给宝宝看，不需要宝宝模仿。</p>
+      <p style={{ fontSize: 12, color: '#8b7a89', marginTop: -8 }}>TPR 由妈妈边说边做动作，给宝宝看，不需要宝宝模仿。</p>
       {engSet.tprs.map((tpr) => (
         <div className="eng-row" key={tpr.title}>
           <div className="eng-row-head">
             <div>
-              <h3 className="eng-title">{tpr.title} <span style={{ color: '#9b59b6', fontWeight: 500 }}>· {tpr.phrase}</span></h3>
+              <h3 className="eng-title">{tpr.title} <span style={{ color: '#ff6b9d', fontWeight: 500 }}>· {tpr.phrase}</span></h3>
               <p className="eng-desc">{tpr.how}</p>
             </div>
             <button className="btn" onClick={() => speakPhrase(tpr.phrase)}>

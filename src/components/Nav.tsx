@@ -1,24 +1,20 @@
-import { CalendarDays, ClipboardCheck, LayoutGrid, Puzzle, Speaker, User } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 export type ViewKey = 'today' | 'library' | 'observe' | 'aids' | 'english' | 'mine'
 
 export interface NavEntry {
   key: ViewKey
   label: string
-  icon: LucideIcon
-  color: string
-  bg: string
+  icon: string
 }
 
 export const NAV: NavEntry[] = [
-  { key: 'today', label: '今日', icon: CalendarDays, color: '#4f8ef7', bg: '#eef4ff' },
-  { key: 'library', label: '活动库', icon: LayoutGrid, color: '#27ae60', bg: '#e8f6ee' },
-  { key: 'observe', label: '观察记录', icon: ClipboardCheck, color: '#f2994a', bg: '#fdf3e7' },
-  { key: 'aids', label: '教具空间', icon: Puzzle, color: '#e67e22', bg: '#fdeee0' },
-  { key: 'english', label: '英文启蒙', icon: Speaker, color: '#9b59b6', bg: '#f3ecfa' },
-  { key: 'mine', label: '我的', icon: User, color: '#16a085', bg: '#e6f5f1' }
+  { key: 'today', label: '今日', icon: '📅' },
+  { key: 'library', label: '活动库', icon: '🗂️' },
+  { key: 'observe', label: '观察记录', icon: '📋' },
+  { key: 'aids', label: '教具空间', icon: '🧩' },
+  { key: 'english', label: '英文启蒙', icon: '🔊' },
+  { key: 'mine', label: '我的', icon: '👩' }
 ]
 
 export function Sidebar({
@@ -40,22 +36,14 @@ export function Sidebar({
       <nav className="nav-list">
         {NAV.map((item) => {
           const active = view === item.key
-          const Icon = item.icon
           return (
             <button
               key={item.key}
               className={`nav-item${active ? ' active' : ''}`}
-              style={
-                active
-                  ? ({ '--nav-bg': item.bg, '--nav-color': item.color } as CSSProperties)
-                  : undefined
-              }
               onClick={() => onChange(item.key)}
               aria-label={item.label}
             >
-              <span className="nav-icon">
-                <Icon size={20} color={item.color} />
-              </span>
+              <span className="nav-icon">{item.icon}</span>
               <span className="nav-text">{item.label}</span>
             </button>
           )
@@ -66,11 +54,20 @@ export function Sidebar({
   )
 }
 
+const PAGE_ICONS: Record<string, string> = {
+  '今日早教': '📅',
+  '活动库': '🗂️',
+  '发育观察记录': '📋',
+  '教具与空间': '🧩',
+  '英文启蒙': '🔊',
+  '我的': '👩'
+}
+
 export function PageHead({ title, desc, extra }: { title: string; desc: ReactNode; extra?: ReactNode }) {
   return (
     <div className="page-head">
       <div>
-        <h1 className="page-title">{title}</h1>
+        <h1 className="page-title"><span className="page-icon">{PAGE_ICONS[title] || '🌸'}</span>{title}</h1>
         <p className="page-desc">{desc}</p>
       </div>
       {extra}

@@ -53,7 +53,7 @@ export default function LibraryView({ band }: { band: AgeBand }) {
           onChange={(e) => setQuery(e.target.value)}
         />
       </div>
-      <div style={{ fontSize: 12, color: '#7a7f87', marginBottom: 12 }}>
+      <div style={{ fontSize: 12, color: '#8b7a89', marginBottom: 12 }}>
         共 {filtered.length} 个活动
       </div>
       {filtered.length === 0 ? (

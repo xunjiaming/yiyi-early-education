@@ -131,7 +131,7 @@ export default function MineView({
         <p className="setting-text">
           系统按出生日期自动切换到对应年龄段。当前已覆盖 0-3 岁 8 个成长阶段，每日内容、观察重点和教具清单都会随月龄变化。
         </p>
-        <p className="setting-text" style={{ fontSize: 12, color: '#7a7f87' }}>
+        <p className="setting-text" style={{ fontSize: 12, color: '#8b7a89' }}>
           已规划：{AGE_BANDS.map((b) => b.name).join(' · ')}
         </p>
       </div>

@@ -27,7 +27,7 @@ export default function ObserveView({ band, ageMonths, obsChecks, onToggleObs, o
           </span>
         }
       />
-      <div className="progress" style={{ backgroundColor: '#e8e7e3' }}>
+      <div className="progress" style={{ backgroundColor: '#ffe0ec' }}>
         <div className="progress-fill" style={{ width: `${overall}%` }} />
       </div>
       <div className="obs-grid" style={{ marginTop: 12 }}>

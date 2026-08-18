@@ -1,4 +1,3 @@
-import { CheckCircle2, Timer } from 'lucide-react'
 import { CheckRow } from './CheckRow'
 import { themeOf, type AgeBand, type DayModule } from '../data/content'
 import type { ViewKey } from './Nav'
@@ -37,14 +36,17 @@ export default function TodayView({
 
   return (
     <>
-      <div className="page-head">
-        <div>
-          <h1 className="page-title">今日早教</h1>
-          <p className="page-desc">内容按月龄自动适配，点击每一项即可打勾，勾选会保存在本机。</p>
+      <div className="today-header">
+        <div className="today-date">{dayKey} · 本周主题</div>
+        <h1 className="today-greeting">下午好，{nickname} 👶</h1>
+        <div className="today-band">{band.name} · {band.stage}</div>
+        <div className="today-badges">
+          <span className="theme-badge">🎀 {theme}</span>
+          <span className="theme-badge">✅ 今日完成 {done}/{total}</span>
         </div>
-        <span className="chip">
-          <CheckCircle2 size={14} /> {done}/{total}
-        </span>
+        <div className="progress today-progress">
+          <div className="progress-fill" style={{ width: `${Math.round((done / total) * 100)}%` }} />
+        </div>
       </div>
 
       <div className="profile-strip">
@@ -52,35 +54,28 @@ export default function TodayView({
         <span className="chip">约 {ageMonths} 个多月</span>
         <span className="chip">{band.name}</span>
         <span className="chip">{band.stage}</span>
-        <span className="chip">
-          <Timer size={14} /> 每天下午约 1 小时
-        </span>
+        <span className="chip">每天下午约 1 小时</span>
       </div>
 
       {bandNotice && (
         <div className="note-banner" style={{ marginBottom: 14 }}>{bandNotice}</div>
       )}
 
-      <div className="theme-banner">
-        <div className="theme-week">{dayKey} · 本周主题</div>
-        <div className="theme-title">{theme}</div>
-        <p className="theme-desc">今天所处年龄段：{band.name}（{band.desc}）。每天内容按日期自动轮换，同一个月龄的玩法重复巩固。</p>
-      </div>
-
       {modules.map((mod) => {
         const modDone = mod.items.filter((it) => dayStore[`${mod.id}-${it.id}`]).length
-        const pct = Math.round((modDone / mod.items.length) * 100)
         return (
           <section className="module-card" key={mod.id}>
             <div className="module-head">
-              <span className="dot" style={{ background: mod.accent }} />
-              <div>
-                <h2 className="module-title">{mod.title}</h2>
-                <div className="module-sub">{mod.subtitle}</div>
+              <span className="m-icon">{MODULE_ICONS[mod.id] || '🌸'}</span>
+              <div className="module-title-wrap">
+                <div>
+                  <h2 className="module-title">{mod.title}</h2>
+                  <div className="module-sub">{mod.subtitle}</div>
+                </div>
               </div>
-              <div className="progress" style={{ marginLeft: 'auto', width: 90, flex: '0 0 auto' }}>
-                <div className="progress-fill" style={{ width: `${pct}%`, background: mod.accent }} />
-              </div>
+              <span className={`m-check${modDone === mod.items.length ? ' done' : ''}`}>
+                {modDone === mod.items.length ? '✓' : `${modDone}/${mod.items.length}`}
+              </span>
             </div>
             <div className="module-body">
               {mod.items.map((it) => (
@@ -113,4 +108,13 @@ export default function TodayView({
       </div>
     </>
   )
+}
+
+const MODULE_ICONS: Record<string, string> = {
+  fine: '✋',
+  lang: '🗣️',
+  cog: '🧠',
+  eng: '🔊',
+  motor: '🏃',
+  care: '📋'
 }
