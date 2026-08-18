@@ -8,8 +8,15 @@
 - [设计方案](docs/DESIGN.md)：总体架构、数据模型、年龄段划分、内容生成逻辑、技术栈与分阶段落地。
 - [0-3 岁全龄早教内容设计](docs/CONTENT_0_3.md)：8 个年龄段的完整内容要点、每日示例、观察项与教具安全。
 - [0-3 岁全龄早教内容设计（后续年龄段详细版）](docs/CONTENT_BANDS_7_36.md)：7-9 月至 31-36 月六个年龄段的详细内容池、观察项、教具、空间安全、英文与主题。
+- [部署指南](docs/DEPLOY.md)：GitHub 配置、token 权限与日常更新方法。
 
 ## 当前状态
 
 - PWA 原型已完成 0-3 岁全龄自适应：8 个年龄阶段、每日五大模块、发育观察、活动库（按龄段筛选）、英文启蒙池、教具与空间区均已接入。
-- 数据默认保存在本机，支持手动导出与导入；上线可选 GitHub Pages / Vercel / Netlify / 腾讯云。
+- 数据默认保存在本机，支持手动导出与导入；线上访问使用 GitHub Pages 自动构建部署。
+
+## 在线访问
+
+- 线上地址：https://xunjiaming.github.io/zhizhi-early-education/
+- 仓库：https://github.com/xunjiaming/zhizhi-early-education
+- 日常更新推送 `git push origin main` 后由 GitHub Actions 自动构建部署。
