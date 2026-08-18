@@ -1,0 +1,8 @@
+node_modules/
+dist/
+logs/
+*.log
+tsconfig.tsbuildinfo
+.github-token.local
+.playwright-cli/
+.playwright-mcp/
