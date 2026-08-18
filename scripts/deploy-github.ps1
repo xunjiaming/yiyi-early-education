@@ -76,7 +76,8 @@ if ($LASTEXITCODE -ne 0) {
   $keyBase = Join-Path $env:TEMP "codex-deploy-key-zhizhi"
   if (Test-Path $keyBase) { Remove-Item $keyBase -Force }
   if (Test-Path "$keyBase.pub") { Remove-Item "$keyBase.pub" -Force }
-  ssh-keygen -t ed25519 -N '' -f $keyBase -C "codex-deploy" | Out-Null
+  $sshArgs = @('-t', 'ed25519', '-N', '', '-f', $keyBase, '-C', 'codex-deploy')
+  & ssh-keygen @sshArgs | Out-Null
   if ($LASTEXITCODE -ne 0) { throw "SSH 密钥生成失败。" }
   Push-WithSsh -PrivKeyPath $keyBase -PubKeyPath "$keyBase.pub" -Owner $owner -RepoName $RepoName
 }
