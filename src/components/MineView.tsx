@@ -13,6 +13,9 @@ interface MineViewProps {
   fileRef: React.RefObject<HTMLInputElement>
   onExport: () => void
   onImport: (file: File | null) => void
+  installAvailable: boolean
+  isStandalone: boolean
+  onInstall: () => void
   notice: string
   clearNotice: () => void
 }
@@ -26,6 +29,9 @@ export default function MineView({
   fileRef,
   onExport,
   onImport,
+  installAvailable,
+  isStandalone,
+  onInstall,
   notice,
   clearNotice
 }: MineViewProps) {
@@ -95,14 +101,29 @@ export default function MineView({
       </div>
 
       <div className="setting-card">
-        <h2 className="setting-title">添加到手机桌面</h2>
+        <h2 className="setting-title">安装到手机桌面</h2>
         <p className="setting-text">
-          用手机浏览器打开本页面，在浏览器菜单里选择“添加到主屏幕”或“添加到桌面”，图标会出现在桌面，像 App 一样使用。OPPO 手机浏览器支持此功能。
+          添加到桌面后，图标会出现在手机桌面，打开后像 App 一样使用，数据仍保存在本机。
         </p>
         <div className="action-bar">
-          <span className="chip"><Smartphone size={14} /> 手机</span>
-          <span className="chip"><Home size={14} /> 桌面快捷方式</span>
+          {isStandalone ? (
+            <span className="chip"><Home size={14} /> 已添加到桌面</span>
+          ) : (
+            <>
+              {installAvailable && (
+                <button className="btn primary" onClick={() => { onInstall(); clearNotice() }}>
+                  <Download size={15} /> 一键安装
+                </button>
+              )}
+              <span className="chip"><Smartphone size={14} /> 浏览器菜单添加</span>
+            </>
+          )}
         </div>
+        {!isStandalone && (
+          <p className="setting-text" style={{ marginTop: 10 }}>
+            浏览器菜单里选择“添加到主屏幕”或“添加到桌面”；没有该选项时，可改用手机自带浏览器或 Chrome 打开。
+          </p>
+        )}
       </div>
 
       <div className="setting-card">

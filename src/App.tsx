@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type RefObject } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { Sidebar, type ViewKey } from './components/Nav'
 import TodayView from './components/TodayView'
 import LibraryView from './components/LibraryView'
@@ -19,13 +19,46 @@ import {
   type BabyProfile
 } from './lib/storage'
 
+interface PwaInstallPromptEvent extends Event {
+  prompt: () => Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
+}
+
 export default function App() {
   const [view, setView] = useState<ViewKey>('today')
   const [profile, setProfile] = useState<BabyProfile>(readProfile)
   const [dailyChecks, setDailyChecks] = useState<Record<string, Record<string, boolean>>>(readDailyChecks)
   const [obsChecks, setObsChecks] = useState<Record<string, boolean>>(readObservationChecks)
   const [notice, setNotice] = useState('')
+  const [installPrompt, setInstallPrompt] = useState<PwaInstallPromptEvent | null>(null)
+  const [isStandalone, setIsStandalone] = useState(
+    () => window.matchMedia('(display-mode: standalone)').matches
+  )
   const fileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    function handlePrompt(event: Event) {
+      event.preventDefault()
+      setInstallPrompt(event as PwaInstallPromptEvent)
+    }
+    function handleInstalled() {
+      setInstallPrompt(null)
+      setIsStandalone(true)
+      setNotice('已安装到桌面，可以像 App 一样使用。')
+    }
+    function handleDisplayMode() {
+      setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
+    }
+    window.addEventListener('beforeinstallprompt', handlePrompt)
+    window.addEventListener('appinstalled', handleInstalled)
+    const media = window.matchMedia('(display-mode: standalone)')
+    media.addEventListener('change', handleDisplayMode)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handlePrompt)
+      window.removeEventListener('appinstalled', handleInstalled)
+      media.removeEventListener('change', handleDisplayMode)
+    }
+  }, [])
 
   const date = useMemo(() => new Date(), [])
   const ageMonths = monthAge(profile.birthDate)
@@ -83,6 +116,23 @@ export default function App() {
     window.setTimeout(() => setNotice(''), 4000)
   }
 
+  async function handleInstall() {
+    const promptEvent = installPrompt
+    if (!promptEvent) {
+      setNotice('当前浏览器没有提供安装按钮，请从浏览器菜单添加到主屏幕。')
+      return
+    }
+    try {
+      await promptEvent.prompt()
+      const choice = await promptEvent.userChoice
+      setInstallPrompt(null)
+      setNotice(choice.outcome === 'accepted' ? '已安装到桌面。' : '未完成安装，可从浏览器菜单再试。')
+    } catch {
+      setInstallPrompt(null)
+      setNotice('浏览器未允许安装，可从浏览器菜单添加到主屏幕。')
+    }
+  }
+
   const shared = {
     date,
     dayKey,
@@ -99,6 +149,9 @@ export default function App() {
     onToggleObs: toggleObservation,
     onExport: handleExport,
     onImport: handleImport,
+    installAvailable: !!installPrompt,
+    isStandalone,
+    onInstall: handleInstall,
     clearNotice,
     navigate: setView
   }
