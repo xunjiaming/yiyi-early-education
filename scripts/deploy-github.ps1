@@ -20,6 +20,23 @@ function Get-GitHubToken {
   return $pass
 }
 
+function Push-WithSsh {
+  param($PrivKeyPath, $PubKeyPath, $Owner, $RepoName)
+  $pub = (Get-Content $PubKeyPath -Raw).Trim()
+  $keyBody = @{ title = "codex-deploy"; key = $pub; read_only = $false } | ConvertTo-Json
+  $keyResult = Invoke-RestMethod -Method Post -Uri "https://api.github.com/repos/$Owner/$RepoName/keys" -Headers $headers -Body $keyBody -ContentType "application/json"
+  $env:GIT_SSH_COMMAND = "ssh -i `"$PrivKeyPath`" -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=$env:TEMP\codex-known-hosts -p 443"
+  & git remote set-url origin "ssh://git@ssh.github.com:443/$Owner/$RepoName.git"
+  & git push -u origin main
+  $pushExit = $LASTEXITCODE
+  if ($pushExit -ne 0) { throw "SSH 推送失败，请检查 GitHub 网络或 token 权限。" }
+  & git remote set-url origin "https://github.com/$Owner/$RepoName.git"
+  try {
+    Invoke-RestMethod -Method Delete -Uri "https://api.github.com/repos/$Owner/$RepoName/keys/$($keyResult.id)" -Headers $headers | Out-Null
+  } catch {}
+  Write-Host "SSH 推送完成并已清理临时部署密钥。"
+}
+
 $token = Get-GitHubToken
 $headers = @{ Authorization = "Bearer $token"; Accept = "application/vnd.github+json" }
 $user = Invoke-RestMethod -Method Get -Uri "https://api.github.com/user" -Headers $headers
@@ -54,7 +71,15 @@ if ($LASTEXITCODE -ne 0) {
 }
 git remote add origin "https://github.com/$owner/$RepoName.git"
 git push -u origin main
-if ($LASTEXITCODE -ne 0) { throw "git push 失败，请检查 token 权限后重试。" }
+if ($LASTEXITCODE -ne 0) {
+  Write-Host "HTTPS 推送失败，改用 SSH over 443 通道重试..."
+  $keyBase = Join-Path $env:TEMP "codex-deploy-key-zhizhi"
+  if (Test-Path $keyBase) { Remove-Item $keyBase -Force }
+  if (Test-Path "$keyBase.pub") { Remove-Item "$keyBase.pub" -Force }
+  ssh-keygen -t ed25519 -N "" -f $keyBase -C "codex-deploy" | Out-Null
+  if ($LASTEXITCODE -ne 0) { throw "SSH 密钥生成失败。" }
+  Push-WithSsh -PrivKeyPath $keyBase -PubKeyPath "$keyBase.pub" -Owner $owner -RepoName $RepoName
+}
 
 try {
   $pagesBody = @{ build_type = "workflow" } | ConvertTo-Json
