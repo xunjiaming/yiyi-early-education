@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Music, Play, StopCircle, Upload, Volume2 } from 'lucide-react'
 import { PageHead } from './Nav'
 import { resolveEnglishSet, themeOf, type AgeBand, type WeeklyTheme } from '../data/content'
 import { loadSongAudio, saveSongAudio, speak, stopSpeaking } from '../lib/speech'
+import { playMelody, stopMelody } from '../lib/melody'
 
 function slug(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -15,6 +16,17 @@ export default function EnglishView({ band }: { band: AgeBand }) {
   const todayTheme: WeeklyTheme = themeOf(new Date())
   const engSet = resolveEnglishSet(band.key)
 
+  useEffect(() => {
+    let cancelled = false
+    const ids = engSet.songs.map((song) => slug(song))
+    Promise.all(ids.map(async (id) => [id, await loadSongAudio(id)] as const)).then((pairs) => {
+      const loaded: Record<string, string> = {}
+      for (const [id, url] of pairs) if (url) loaded[id] = url
+      if (!cancelled) setAudioUrls(loaded)
+    })
+    return () => { cancelled = true }
+  }, [band.key])
+
   async function handleSongFile(id: string, file: File | null) {
     if (!file) return
     await saveSongAudio(id, file)
@@ -22,11 +34,14 @@ export default function EnglishView({ band }: { band: AgeBand }) {
     setAudioUrls((prev) => ({ ...prev, [id]: url || '' }))
   }
 
-  async function playSong(id: string) {
+  async function playSong(id: string, title: string) {
     const url = audioUrls[id]
-    if (!url) return
-    const audio = new Audio(url)
-    audio.play()
+    if (url) {
+      const audio = new Audio(url)
+      void audio.play().catch(() => playMelody(title))
+      return
+    }
+    playMelody(title)
   }
 
   function speakPhrase(text: string) {
@@ -35,20 +50,25 @@ export default function EnglishView({ band }: { band: AgeBand }) {
     setTimeout(() => setSpeaking(false), text.length * 90 + 400)
   }
 
+  function handleStop() {
+    stopSpeaking()
+    stopMelody()
+  }
+
   return (
     <>
       <PageHead
         title="英文启蒙"
         desc="只磨耳朵、建立画面对应，不认读、不拼写、无压力。妈妈做，宝宝看和听。"
         extra={
-          <button className="btn" onClick={stopSpeaking}><StopCircle size={16} /> 停止</button>
+          <button className="btn" onClick={handleStop}><StopCircle size={16} /> 停止</button>
         }
       />
 
       <div className="setting-card">
         <h2 className="setting-title">本月做法</h2>
         <p className="setting-text">
-          当前年龄段：{band.name}。核心是磨耳朵，不教认读、不背单词。短句用手机语音播报，儿歌可上传音频后播放；播放时只给宝宝听声音，不给宝宝看屏幕。
+          当前年龄段：{band.name}。核心是磨耳朵，不教认读、不背单词。短句用手机语音播报，儿歌可上传音频后播放，未上传也能播放内置轻旋律；播放时只给宝宝听声音，不给宝宝看屏幕。
         </p>
       </div>
 
@@ -56,16 +76,15 @@ export default function EnglishView({ band }: { band: AgeBand }) {
       <p style={{ fontSize: 12, color: '#7a7f87', marginTop: -8 }}>建议每周固定 1 至 2 首英文儿歌反复听。</p>
       {engSet.songs.map((song, i) => {
         const id = slug(song)
-        const hasAudio = !!audioUrls[id]
         return (
           <div className="eng-row" key={song} style={i > 0 ? { marginTop: -8 } : undefined}>
             <div className="eng-row-head">
               <div>
                 <h3 className="eng-title"><Music size={15} style={{ display: 'inline', marginRight: 6, color: '#9b59b6' }} />{song}</h3>
-                <p className="eng-desc">TPR 磨耳朵 · 可上传你的音频文件播放</p>
+                <p className="eng-desc">可上传你的音频文件播放，未上传时自动播放轻旋律</p>
               </div>
               <div className="action-bar" style={{ marginTop: 0 }}>
-                <button className="btn" onClick={() => playSong(id)} disabled={!hasAudio}>
+                <button className="btn" onClick={() => playSong(id, song)}>
                   <Play size={15} /> 播放
                 </button>
                 <button className="btn" onClick={() => fileRef.current?.[id]?.click()}>

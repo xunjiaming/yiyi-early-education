@@ -10,8 +10,12 @@ export function speak(text: string, rate = 0.78): boolean {
   if (!speechSupported()) return false
   const synth = window.speechSynthesis
   synth.cancel()
+  const voices = synth.getVoices()
+  const voice = voices.find((v) => /en[-_]/i.test(v.lang) && /us|united states|american/i.test(v.name + v.lang))
+    || voices.find((v) => /^en/i.test(v.lang)) || null
   const utter = new SpeechSynthesisUtterance(text)
   utter.lang = 'en-US'
+  if (voice) utter.voice = voice
   utter.rate = rate
   utter.pitch = 1.05
   synth.speak(utter)
