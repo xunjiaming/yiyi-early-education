@@ -12,7 +12,7 @@ export interface EnglishSet {
 
 export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
   '7-9m': {
-    songs: ['Hello Song', 'Itsy Bitsy Spider', 'The Wheels on the Bus', 'One Little Finger'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
     phrases: [
       'Good morning, sweetie!',
       'Wave bye-bye.',
@@ -28,7 +28,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '10-12m': {
-    songs: ['Hello Song', 'Itsy Bitsy Spider', 'The Wheels on the Bus', 'One Little Finger', 'If You\'re Happy'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
     phrases: [
       'Give me the ball.',
       'Where is your nose?',
@@ -45,7 +45,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '13-18m': {
-    songs: ['Head, Shoulders, Knees and Toes', 'Rain Rain Go Away', 'Old MacDonald Had a Farm', 'Five Little Ducks'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
     phrases: [
       'Where is your nose?',
       'Give me the ball, please.',
@@ -61,7 +61,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '19-24m': {
-    songs: ['Head, Shoulders, Knees and Toes', 'Old MacDonald Had a Farm', 'Five Little Ducks', 'Walking Walking', 'Row, Row, Row Your Boat'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
     phrases: [
       'What do you see?',
       'I see a big dog.',
@@ -77,7 +77,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '25-30m': {
-    songs: ['Bingo', 'Walking Walking', 'Row, Row, Row Your Boat', 'The Wheels on the Bus', 'If You\'re Happy'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
     phrases: [
       'What color is this?',
       'It is a big red car.',
@@ -93,7 +93,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '31-36m': {
-    songs: ['Bingo', 'Row, Row, Row Your Boat', 'Open Shut Them', 'Head, Shoulders, Knees and Toes', 'If You\'re Happy'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
     phrases: [
       'What is this?',
       'I am three years old.',

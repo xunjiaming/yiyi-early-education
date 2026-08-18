@@ -205,12 +205,12 @@ const MOTOR_0_6: Record<string, DayItem[]> = {
 }
 
 export const SONG_POOL = [
-  'Hello Song',
-  'Peek a Boo',
-  'Itsy Bitsy Spider',
-  'Wheels on the Bus',
-  'One Little Finger',
-  'If You\'re Happy'
+  'The Itsy Bitsy Spider',
+  'Twinkle, Twinkle, Little Star',
+  'Row, Row, Row Your Boat',
+  'Baa, Baa, Black Sheep',
+  'Old MacDonald Had a Farm',
+  'The Alphabet Song'
 ]
 
 export const PHRASE_POOL = [

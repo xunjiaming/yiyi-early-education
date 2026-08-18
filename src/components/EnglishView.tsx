@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { Music, Play, StopCircle, Upload, Volume2 } from 'lucide-react'
+import { Music, Play, StopCircle, Upload, Volume2, Music2 } from 'lucide-react'
 import { PageHead } from './Nav'
 import { resolveEnglishSet, themeOf, type AgeBand, type WeeklyTheme } from '../data/content'
+import { BUNDLED_SONG_AUDIO, bundledAudioUrl } from '../data/songs'
 import { loadSongAudio, saveSongAudio, speak, stopSpeaking } from '../lib/speech'
-import { playMelody, stopMelody } from '../lib/melody'
 
 function slug(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -12,6 +12,7 @@ function slug(text: string): string {
 export default function EnglishView({ band }: { band: AgeBand }) {
   const [audioUrls, setAudioUrls] = useState<Record<string, string>>({})
   const fileRef = useRef<Record<string, HTMLInputElement | null>>({})
+  const currentAudio = useRef<HTMLAudioElement | null>(null)
   const [speaking, setSpeaking] = useState(false)
   const todayTheme: WeeklyTheme = themeOf(new Date())
   const engSet = resolveEnglishSet(band.key)
@@ -34,17 +35,30 @@ export default function EnglishView({ band }: { band: AgeBand }) {
     setAudioUrls((prev) => ({ ...prev, [id]: url || '' }))
   }
 
-  async function playSong(id: string, title: string) {
-    const url = audioUrls[id]
-    if (url) {
-      const audio = new Audio(url)
-      void audio.play().catch(() => playMelody(title))
-      return
+  function stopAudio() {
+    if (currentAudio.current) {
+      currentAudio.current.pause()
+      currentAudio.current = null
     }
-    playMelody(title)
+  }
+
+  function playSong(id: string) {
+    stopSpeaking()
+    stopAudio()
+    const uploaded = audioUrls[id]
+    const bundled = bundledAudioUrl(id)
+    const src = uploaded || bundled
+    if (!src) return
+    const audio = new Audio(src)
+    currentAudio.current = audio
+    void audio.play().catch(() => {
+      if (!uploaded && bundled) return
+      stopAudio()
+    })
   }
 
   function speakPhrase(text: string) {
+    stopAudio()
     speak(text)
     setSpeaking(true)
     setTimeout(() => setSpeaking(false), text.length * 90 + 400)
@@ -52,7 +66,15 @@ export default function EnglishView({ band }: { band: AgeBand }) {
 
   function handleStop() {
     stopSpeaking()
-    stopMelody()
+    stopAudio()
+  }
+
+  function audioStatus(id: string): { label: string; bundled: boolean } {
+    const hasUpload = Boolean(audioUrls[id])
+    const hasBuiltIn = Boolean(BUNDLED_SONG_AUDIO[id])
+    if (hasUpload) return { label: '已上传音频', bundled: false }
+    if (hasBuiltIn) return { label: '内置真实录音', bundled: true }
+    return { label: '请上传音频', bundled: false }
   }
 
   return (
@@ -68,7 +90,7 @@ export default function EnglishView({ band }: { band: AgeBand }) {
       <div className="setting-card">
         <h2 className="setting-title">本月做法</h2>
         <p className="setting-text">
-          当前年龄段：{band.name}。核心是磨耳朵，不教认读、不背单词。短句用手机语音播报，儿歌可上传音频后播放，未上传也能播放内置轻旋律；播放时只给宝宝听声音，不给宝宝看屏幕。
+          当前年龄段：{band.name}。核心是磨耳朵，不教认读、不背单词。经典儿歌已内置公共领域真实录音，点击播放即可；极少数受版权保护、内置没有的儿歌，可上传你自己的音频。播放时只给宝宝听声音，不给宝宝看屏幕。
         </p>
       </div>
 
@@ -76,15 +98,21 @@ export default function EnglishView({ band }: { band: AgeBand }) {
       <p style={{ fontSize: 12, color: '#8b7a89', marginTop: -8 }}>建议每周固定 1 至 2 首英文儿歌反复听。</p>
       {engSet.songs.map((song, i) => {
         const id = slug(song)
+        const status = audioStatus(id)
         return (
           <div className="eng-row" key={song} style={i > 0 ? { marginTop: -8 } : undefined}>
             <div className="eng-row-head">
               <div>
                 <h3 className="eng-title"><Music size={15} style={{ display: 'inline', marginRight: 6, color: '#ff6b9d' }} />{song}</h3>
-                <p className="eng-desc">可上传你的音频文件播放，未上传时自动播放轻旋律</p>
+                <p className="eng-desc">
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, color: status.bundled ? '#27ae60' : '#e67e22' }}>
+                    <Music2 size={12} /> {status.label}
+                  </span>
+                  {!status.bundled && !audioUrls[id] ? ' · 上传后即可播放真实音频' : ''}
+                </p>
               </div>
               <div className="action-bar" style={{ marginTop: 0 }}>
-                <button className="btn" onClick={() => playSong(id, song)}>
+                <button className="btn" onClick={() => playSong(id)}>
                   <Play size={15} /> 播放
                 </button>
                 <button className="btn" onClick={() => fileRef.current?.[id]?.click()}>

@@ -6,3 +6,5 @@ tsconfig.tsbuildinfo
 .github-token.local
 .playwright-cli/
 .playwright-mcp/
+.audio-tmp/
+.fftmp/

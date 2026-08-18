@@ -20,3 +20,14 @@
 - 线上地址：https://xunjiaming.github.io/yiyi-early-education/
 - 仓库：https://github.com/xunjiaming/yiyi-early-education
 - 日常更新推送 `git push origin main` 后由 GitHub Actions 自动构建部署。
+
+## 内置儿歌音频与许可
+
+英文启蒙内置的真实儿歌录音来自 [Wikimedia Commons](https://commons.wikimedia.org/)，均为可自由再发行的公共领域 / CC 授权音频，仅做格式转码以适配移动端播放，未改动内容：
+
+- The Itsy Bitsy Spider — CC BY-SA 3.0（Wwaters）
+- Twinkle, Twinkle, Little Star — CC0（Dcoetzee）
+- Row, Row, Row Your Boat — CC BY-SA 3.0（CambridgeBayWeather）
+- Baa, Baa, Black Sheep — CC BY-SA 3.0（CambridgeBayWeather）
+- Old MacDonald Had a Farm — CC BY-SA 3.0（CambridgeBayWeather）
+- The Alphabet Song — CC BY-SA 3.0（CambridgeBayWeather）
