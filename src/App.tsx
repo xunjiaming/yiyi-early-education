@@ -19,10 +19,7 @@ import {
   type BabyProfile
 } from './lib/storage'
 
-interface PwaInstallPromptEvent extends Event {
-  prompt: () => Promise<void>
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>
-}
+import { consumeInstallPrompt, getDeferredPrompt, subscribeInstallPrompt, type PwaInstallPromptEvent } from './lib/install'
 
 export default function App() {
   const [view, setView] = useState<ViewKey>('today')
@@ -30,17 +27,13 @@ export default function App() {
   const [dailyChecks, setDailyChecks] = useState<Record<string, Record<string, boolean>>>(readDailyChecks)
   const [obsChecks, setObsChecks] = useState<Record<string, boolean>>(readObservationChecks)
   const [notice, setNotice] = useState('')
-  const [installPrompt, setInstallPrompt] = useState<PwaInstallPromptEvent | null>(null)
+  const [installPrompt, setInstallPrompt] = useState<PwaInstallPromptEvent | null>(getDeferredPrompt)
   const [isStandalone, setIsStandalone] = useState(
     () => window.matchMedia('(display-mode: standalone)').matches
   )
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    function handlePrompt(event: Event) {
-      event.preventDefault()
-      setInstallPrompt(event as PwaInstallPromptEvent)
-    }
     function handleInstalled() {
       setInstallPrompt(null)
       setIsStandalone(true)
@@ -49,14 +42,22 @@ export default function App() {
     function handleDisplayMode() {
       setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
     }
-    window.addEventListener('beforeinstallprompt', handlePrompt)
     window.addEventListener('appinstalled', handleInstalled)
     const media = window.matchMedia('(display-mode: standalone)')
-    media.addEventListener('change', handleDisplayMode)
+    const subscribe = subscribeInstallPrompt((prompt) => setInstallPrompt(prompt))
+    if (media.addEventListener) {
+      media.addEventListener('change', handleDisplayMode)
+    } else {
+      media.addListener(handleDisplayMode)
+    }
     return () => {
-      window.removeEventListener('beforeinstallprompt', handlePrompt)
       window.removeEventListener('appinstalled', handleInstalled)
-      media.removeEventListener('change', handleDisplayMode)
+      subscribe()
+      if (media.removeEventListener) {
+        media.removeEventListener('change', handleDisplayMode)
+      } else {
+        media.removeListener(handleDisplayMode)
+      }
     }
   }, [])
 
@@ -125,9 +126,11 @@ export default function App() {
     try {
       await promptEvent.prompt()
       const choice = await promptEvent.userChoice
+      consumeInstallPrompt()
       setInstallPrompt(null)
       setNotice(choice.outcome === 'accepted' ? '已安装到桌面。' : '未完成安装，可从浏览器菜单再试。')
     } catch {
+      consumeInstallPrompt()
       setInstallPrompt(null)
       setNotice('浏览器未允许安装，可从浏览器菜单添加到主屏幕。')
     }

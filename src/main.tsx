@@ -4,6 +4,9 @@ import App from './App'
 import './styles.css'
 
 import { registerSW } from 'virtual:pwa-register'
+import { trackInstallPrompt } from './lib/install'
+
+trackInstallPrompt()
 registerSW({ immediate: true })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
