@@ -1,7 +1,7 @@
 ﻿param(
   [string]$RepoName = "zhizhi-early-education"
 )
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Continue"
 $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 $tokenFile = Join-Path $root ".github-token.local"
@@ -45,10 +45,15 @@ git init
 git config user.name "$owner"
 git config user.email "$owner@users.noreply.github.com"
 git add .
-git commit -m "feat: 0-3 岁早教工作台线上部署"
 git remote remove origin 2>$null
+git diff --cached --quiet
+if ($LASTEXITCODE -ne 0) {
+  git commit -m "feat: 0-3 岁早教工作台线上部署"
+  if ($LASTEXITCODE -ne 0) { throw "git commit 失败，请检查本机 Git 配置。" }
+}
 git remote add origin "https://github.com/$owner/$RepoName.git"
 git push -u origin main
+if ($LASTEXITCODE -ne 0) { throw "git push 失败，请检查 token 权限后重试。" }
 
 try {
   $pagesBody = @{ build_type = "workflow" } | ConvertTo-Json
