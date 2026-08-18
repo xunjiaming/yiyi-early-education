@@ -44,6 +44,7 @@ try {
 git init
 git config user.name "$owner"
 git config user.email "$owner@users.noreply.github.com"
+git branch -M main
 git add .
 git remote remove origin 2>$null
 git diff --cached --quiet
