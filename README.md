@@ -28,6 +28,6 @@
 - The Itsy Bitsy Spider — CC BY-SA 3.0（Wwaters）
 - Twinkle, Twinkle, Little Star — CC0（Dcoetzee）
 - Row, Row, Row Your Boat — CC BY-SA 3.0（CambridgeBayWeather）
-- Baa, Baa, Black Sheep — CC BY-SA 3.0（CambridgeBayWeather）
 - Old MacDonald Had a Farm — CC BY-SA 3.0（CambridgeBayWeather）
-- The Alphabet Song — CC BY-SA 3.0（CambridgeBayWeather）
+- Three Little Kittens — CC BY-SA 3.0（CambridgeBayWeather）
+- London Bridge Is Falling Down — CC BY-SA 3.0（CambridgeBayWeather）

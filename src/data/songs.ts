@@ -9,9 +9,9 @@ export const BUNDLED_SONG_AUDIO: Record<string, BundledSong> = {
   'the-itsy-bitsy-spider': { title: 'The Itsy Bitsy Spider', file: 'itsy-bitsy-spider.mp3' },
   'twinkle-twinkle-little-star': { title: 'Twinkle, Twinkle, Little Star', file: 'twinkle.mp3' },
   'row-row-row-your-boat': { title: 'Row, Row, Row Your Boat', file: 'row-boat.mp3' },
-  'baa-baa-black-sheep': { title: 'Baa, Baa, Black Sheep', file: 'baa-baa.mp3' },
   'old-macdonald-had-a-farm': { title: 'Old MacDonald Had a Farm', file: 'old-macdonald.mp3' },
-  'the-alphabet-song': { title: 'The Alphabet Song', file: 'abc.mp3' }
+  'three-little-kittens': { title: 'Three Little Kittens', file: 'three-little-kittens.mp3' },
+  'london-bridge-is-falling-down': { title: 'London Bridge Is Falling Down', file: 'london-bridge.mp3' }
 }
 
 export function bundledAudioUrl(id: string): string | null {

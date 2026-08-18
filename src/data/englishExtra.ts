@@ -12,7 +12,7 @@ export interface EnglishSet {
 
 export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
   '7-9m': {
-    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Old MacDonald Had a Farm', 'Three Little Kittens', 'London Bridge Is Falling Down'],
     phrases: [
       'Good morning, sweetie!',
       'Wave bye-bye.',
@@ -28,7 +28,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '10-12m': {
-    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Old MacDonald Had a Farm', 'Three Little Kittens', 'London Bridge Is Falling Down'],
     phrases: [
       'Give me the ball.',
       'Where is your nose?',
@@ -45,7 +45,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '13-18m': {
-    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Old MacDonald Had a Farm', 'Three Little Kittens', 'London Bridge Is Falling Down'],
     phrases: [
       'Where is your nose?',
       'Give me the ball, please.',
@@ -61,7 +61,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '19-24m': {
-    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Old MacDonald Had a Farm', 'Three Little Kittens', 'London Bridge Is Falling Down'],
     phrases: [
       'What do you see?',
       'I see a big dog.',
@@ -77,7 +77,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '25-30m': {
-    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Old MacDonald Had a Farm', 'Three Little Kittens', 'London Bridge Is Falling Down'],
     phrases: [
       'What color is this?',
       'It is a big red car.',
@@ -93,7 +93,7 @@ export const ENGLISH_BY_BAND: Record<string, EnglishSet> = {
     ]
   },
   '31-36m': {
-    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Baa, Baa, Black Sheep', 'Old MacDonald Had a Farm', 'The Alphabet Song'],
+    songs: ['The Itsy Bitsy Spider', 'Twinkle, Twinkle, Little Star', 'Row, Row, Row Your Boat', 'Old MacDonald Had a Farm', 'Three Little Kittens', 'London Bridge Is Falling Down'],
     phrases: [
       'What is this?',
       'I am three years old.',

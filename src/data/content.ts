@@ -208,9 +208,9 @@ export const SONG_POOL = [
   'The Itsy Bitsy Spider',
   'Twinkle, Twinkle, Little Star',
   'Row, Row, Row Your Boat',
-  'Baa, Baa, Black Sheep',
   'Old MacDonald Had a Farm',
-  'The Alphabet Song'
+  'Three Little Kittens',
+  'London Bridge Is Falling Down'
 ]
 
 export const PHRASE_POOL = [
