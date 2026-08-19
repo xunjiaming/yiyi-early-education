@@ -24,7 +24,12 @@ export function stopTaskAudio(): void {
 export async function playSongAudio(title: string): Promise<boolean> {
   stopTaskAudio()
   const id = slug(title)
-  const uploaded = await loadSongAudio(id)
+  let uploaded: string | null = null
+  try {
+    uploaded = await loadSongAudio(id)
+  } catch {
+    // IndexedDB 被限制（无痕 / 个别内置浏览器）时仍可播放内置音频
+  }
   const bundled = bundledAudioUrl(id)
   const src = uploaded || bundled
   if (!src) return false

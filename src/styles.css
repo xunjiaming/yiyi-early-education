@@ -285,6 +285,7 @@ button {
   border-radius: 999px;
   font-size: 13px;
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 
 .today-progress {
