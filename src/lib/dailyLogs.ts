@@ -1,4 +1,5 @@
 export type PoopConsistency = '' | '正常' | '稀' | '硬' | '水样'
+export type SleepType = '' | '夜间' | '午睡' | '小睡'
 
 export interface FeedLog {
   id: string
@@ -19,15 +20,30 @@ export interface PoopLog {
   note: string
 }
 
-export type DailyLog = FeedLog | PoopLog
-export type LogFilter = 'all' | 'feed' | 'poop'
+export interface SleepLog {
+  id: string
+  type: 'sleep'
+  startAt: string
+  endAt: string
+  durationSec: number
+  date: string
+  sleepType: SleepType
+  note: string
+}
+
+export type DailyLog = FeedLog | PoopLog | SleepLog
+export type LogFilter = 'all' | 'feed' | 'poop' | 'sleep'
 
 export interface FeedingSession {
+  startAt: string
+}
+export interface SleepSession {
   startAt: string
 }
 
 const LOGS_KEY = 'baby.dailyLogs.v1'
 const SESSION_KEY = 'baby.feedingSession.v1'
+const SLEEP_SESSION_KEY = 'baby.sleepSession.v1'
 
 function toDateKey(d: Date): string {
   const y = d.getFullYear()
@@ -50,6 +66,22 @@ export function formatDuration(sec: number): string {
 
 export function formatDurationMin(sec: number): string {
   return (sec / 60).toFixed(1)
+}
+
+export function formatSleepDuration(sec: number): string {
+  const h = Math.floor(sec / 3600)
+  const m = Math.floor((sec % 3600) / 60)
+  if (h === 0) return `${m}分`
+  if (m === 0) return `${h}小时`
+  return `${h}小时${m}分`
+}
+
+export function formatDateTimeLabel(d: Date): string {
+  const mo = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hh = String(d.getHours()).padStart(2, '0')
+  const mm = String(d.getMinutes()).padStart(2, '0')
+  return `${mo}-${day} ${hh}:${mm}`
 }
 
 export function readLogs(): DailyLog[] {
@@ -78,6 +110,39 @@ export function readSession(): FeedingSession | null {
 export function writeSession(s: FeedingSession | null): void {
   if (!s) localStorage.removeItem(SESSION_KEY)
   else localStorage.setItem(SESSION_KEY, JSON.stringify(s))
+}
+
+export function readSleepSession(): SleepSession | null {
+  try {
+    const raw = localStorage.getItem(SLEEP_SESSION_KEY)
+    if (!raw) return null
+    const s = JSON.parse(raw) as SleepSession
+    if (!s.startAt || isNaN(new Date(s.startAt).getTime())) return null
+    return s
+  } catch { return null }
+}
+
+export function writeSleepSession(s: SleepSession | null): void {
+  if (!s) localStorage.removeItem(SLEEP_SESSION_KEY)
+  else localStorage.setItem(SLEEP_SESSION_KEY, JSON.stringify(s))
+}
+
+export function addSleepLog(startAt: Date, endAt: Date, sleepType: SleepType, note: string): SleepLog {
+  const durationSec = Math.max(0, Math.round((endAt.getTime() - startAt.getTime()) / 1000))
+  const log: SleepLog = {
+    id: `sleep_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    type: 'sleep',
+    startAt: startAt.toISOString(),
+    endAt: endAt.toISOString(),
+    durationSec,
+    date: toDateKey(startAt),
+    sleepType,
+    note: note.trim()
+  }
+  const logs = readLogs()
+  logs.unshift(log)
+  writeLogs(logs)
+  return log
 }
 
 export function addFeedLog(startAt: Date, endAt: Date, note: string): FeedLog {
@@ -134,6 +199,7 @@ export interface DayAgg {
   feedCount: number
   feedMin: number
   poopCount: number
+  sleepMin: number
 }
 
 export function buildDayAggs(logs: DailyLog[], days: number, endDate: Date = new Date()): DayAgg[] {
@@ -144,13 +210,14 @@ export function buildDayAggs(logs: DailyLog[], days: number, endDate: Date = new
     d.setDate(d.getDate() - i)
     const key = toDateKey(d)
     const label = `${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
-    map.set(key, { date: key, label, feedCount: 0, feedMin: 0, poopCount: 0 })
+    map.set(key, { date: key, label, feedCount: 0, feedMin: 0, poopCount: 0, sleepMin: 0 })
   }
   for (const l of logs) {
     const agg = map.get(l.date)
     if (!agg) continue
     if (l.type === 'feed') { agg.feedCount += 1; agg.feedMin += (l as FeedLog).durationSec / 60 }
-    else agg.poopCount += 1
+    else if (l.type === 'poop') agg.poopCount += 1
+    else if (l.type === 'sleep') agg.sleepMin += (l as SleepLog).durationSec / 60
   }
   return Array.from(map.values())
 }
@@ -162,14 +229,17 @@ export function exportLogsCsv(logs: DailyLog[], startDate: string, endDate: stri
       const tb = b.type === 'feed' ? (b as FeedLog).startAt : (b as PoopLog).createdAt
       return ta.localeCompare(tb)
     })
-  const header = ['日期', '类型', '开始时间', '结束时间', '时长(分钟)', '性状', '备注']
+  const header = ['日期', '类型', '开始时间', '结束时间', '时长(分钟)', '性状/标签', '备注']
   const rows = filtered.map(l => {
     if (l.type === 'feed') {
       const f = l as FeedLog
       return [f.date, '喝奶', toTimeLabel(new Date(f.startAt)), toTimeLabel(new Date(f.endAt)), formatDurationMin(f.durationSec), '', f.note.replace(/"/g, '""')]
-    } else {
+    } else if (l.type === 'poop') {
       const p = l as PoopLog
       return [p.date, '拉屎', toTimeLabel(new Date(p.createdAt)), '', '', p.consistency, p.note.replace(/"/g, '""')]
+    } else {
+      const s = l as SleepLog
+      return [s.date, '睡觉', formatDateTimeLabel(new Date(s.startAt)), formatDateTimeLabel(new Date(s.endAt)), formatDurationMin(s.durationSec), s.sleepType, s.note.replace(/"/g, '""')]
     }
   })
   const csv = [header, ...rows].map(r => r.map(c => `"${c}"`).join(',')).join('\r\n')
