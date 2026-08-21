@@ -1,9 +1,12 @@
+import { readLogs as readDailyLogsRaw, writeLogs as writeDailyLogsRaw, type DailyLog } from './dailyLogs'
+
 export interface BackupData {
   app: string
   version: number
   exportedAt: string
   dailyChecks: Record<string, Record<string, boolean>>
   observationChecks: Record<string, boolean>
+  dailyLogs?: DailyLog[]
 }
 
 const DAILY_KEY = 'baby.dailyChecks.v1'
@@ -38,10 +41,11 @@ export function writeObservationChecks(data: Record<string, boolean>): void {
 export function exportBackup(): BackupData {
   return {
     app: 'baby-education-workbench',
-    version: 1,
+    version: 2,
     exportedAt: new Date().toISOString(),
     dailyChecks: readDailyChecks(),
-    observationChecks: readObservationChecks()
+    observationChecks: readObservationChecks(),
+    dailyLogs: readDailyLogsRaw()
   }
 }
 
@@ -52,6 +56,9 @@ export function importBackup(json: string): void {
   }
   writeDailyChecks(data.dailyChecks || {})
   writeObservationChecks(data.observationChecks || {})
+  if (data.dailyLogs && Array.isArray(data.dailyLogs)) {
+    writeDailyLogsRaw(data.dailyLogs as DailyLog[])
+  }
 }
 
 export interface BabyProfile {

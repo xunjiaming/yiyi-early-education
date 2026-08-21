@@ -6,7 +6,9 @@ import ObserveView from './components/ObserveView'
 import AidsView from './components/AidsView'
 import EnglishView from './components/EnglishView'
 import MineView from './components/MineView'
+import DailyLogsView from './components/DailyLogsView'
 import { buildDay, monthAge, resolveAvailableBand, todayKey } from './data/content'
+import { readLogs } from './lib/dailyLogs'
 import {
   readDailyChecks,
   readObservationChecks,
@@ -26,6 +28,7 @@ export default function App() {
   const [profile, setProfile] = useState<BabyProfile>(readProfile)
   const [dailyChecks, setDailyChecks] = useState<Record<string, Record<string, boolean>>>(readDailyChecks)
   const [obsChecks, setObsChecks] = useState<Record<string, boolean>>(readObservationChecks)
+  const [dailyLogs, setDailyLogs] = useState(() => readLogs())
   const [notice, setNotice] = useState('')
   const [installPrompt, setInstallPrompt] = useState<PwaInstallPromptEvent | null>(getDeferredPrompt)
   const [isStandalone, setIsStandalone] = useState(
@@ -105,6 +108,7 @@ export default function App() {
       importBackup(text)
       setDailyChecks(readDailyChecks())
       setObsChecks(readObservationChecks())
+      setDailyLogs(readLogs())
       setNotice('导入成功，记录已恢复。')
     } catch (err) {
       setNotice(`导入失败：${(err as Error).message}`)
@@ -169,6 +173,7 @@ export default function App() {
           {view === 'observe' && <ObserveView {...shared} />}
           {view === 'aids' && <AidsView />}
           {view === 'english' && <EnglishView {...shared} />}
+          {view === 'daily' && <DailyLogsView logs={dailyLogs} onLogsChange={setDailyLogs} />}
           {view === 'mine' && (
             <MineView {...shared} fileRef={fileRef as unknown as RefObject<HTMLInputElement>} />
           )}

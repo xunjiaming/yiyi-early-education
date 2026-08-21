@@ -944,3 +944,27 @@ button {
     padding: calc(20px + var(--safe-top)) 20px calc(20px + var(--safe-bottom));
   }
 }
+
+.log-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.log-btn-card { border-radius: var(--radius); background: var(--card-bg); border: 1px solid var(--line); box-shadow: var(--shadow); padding: 16px; }
+.log-btn-title { font-size: 16px; font-weight: 700; margin: 0 0 4px; }
+.log-btn-desc { font-size: 12px; color: var(--muted); margin: 0 0 10px; }
+.log-main-btn { width: 100%; justify-content: center; padding: 12px 16px; font-size: 15px; font-weight: 700; border-radius: 12px; }
+.log-main-btn.feeding { background: linear-gradient(135deg, #ff6b9d, #ff8fb1); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 0%,100% { box-shadow: 0 4px 16px rgba(255,107,157,0.25); } 50% { box-shadow: 0 6px 24px rgba(255,107,157,0.45); } }
+.feeding-bar { display: flex; align-items: center; gap: 8px; background: #fff0f5; border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--primary-strong); }
+.feeding-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0.3; } }
+.chart-wrap { background: #fff; border-radius: 12px; padding: 8px; }
+.chart-svg { width: 100%; height: auto; display: block; }
+.chart-legend { display: flex; gap: 12px; margin-top: 6px; font-size: 11px; color: var(--muted); justify-content: center; }
+.chart-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.chart-legend-item i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.log-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+.log-item { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 13px; }
+.log-badge { font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+.log-badge.feed { background: #ffe5f0; color: var(--primary-strong); }
+.log-badge.poop { background: #eee8ff; color: #6b4bd6; }
+.log-time { color: var(--ink); font-weight: 600; }
+.log-dur { color: var(--primary); font-weight: 600; }
+.log-note { color: var(--muted); font-size: 12px; }

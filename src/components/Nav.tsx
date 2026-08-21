@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export type ViewKey = 'today' | 'library' | 'observe' | 'aids' | 'english' | 'mine'
+export type ViewKey = 'today' | 'library' | 'observe' | 'aids' | 'english' | 'daily' | 'mine'
 
 export interface NavEntry {
   key: ViewKey
@@ -14,6 +14,7 @@ export const NAV: NavEntry[] = [
   { key: 'observe', label: '观察记录', icon: '📋' },
   { key: 'aids', label: '教具空间', icon: '🧩' },
   { key: 'english', label: '英文启蒙', icon: '🔊' },
+  { key: 'daily', label: '日常记录', icon: '🍼' },
   { key: 'mine', label: '我的', icon: '👩' }
 ]
 
@@ -60,6 +61,7 @@ const PAGE_ICONS: Record<string, string> = {
   '发育观察记录': '📋',
   '教具与空间': '🧩',
   '英文启蒙': '🔊',
+  '日常记录': '🍼',
   '我的': '👩'
 }
 
